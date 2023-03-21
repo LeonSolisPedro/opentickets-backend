@@ -22,6 +22,7 @@ namespace opentickets_backend.Controllers
         }
 
         // GET: api/Tickets
+        [Route("GetTickets")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
         {
@@ -33,7 +34,8 @@ namespace opentickets_backend.Controllers
         }
 
         // GET: api/Tickets/5
-        [HttpGet("{id}")]
+        [Route("GetTicket/{id}")]
+        [HttpGet]
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
           if (_context.Tickets == null)
@@ -48,6 +50,14 @@ namespace opentickets_backend.Controllers
             }
 
             return ticket;
+        }
+
+        [Route("GetTicketsPorIdCompu/{id}")]
+        [HttpGet]
+        public async Task<List<Ticket>> GetTicketsPorIdCompu(int id)
+        {
+            var tickets = await _context.Tickets.Include(x => x.Solucion).Where(x => x.IdComputadora == id).ToListAsync();
+            return tickets;
         }
 
         // PUT: api/Tickets/5
@@ -107,6 +117,9 @@ namespace opentickets_backend.Controllers
 
             if (id != solucion.IdTicket)
                 return BadRequest();
+
+            if (_context.Soluciones.Any(x => x.IdTicket == id))
+                return UnprocessableEntity();
 
             _context.Soluciones.Add(solucion);
             await _context.SaveChangesAsync();
