@@ -117,15 +117,13 @@ namespace opentickets_backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComputadora(int id)
         {
-            if (_context.Computadoras == null)
-            {
-                return NotFound();
-            }
-            var computadora = await _context.Computadoras.FindAsync(id);
+            var computadora = await _context.Computadoras.Include(x => x.Empleado).FirstOrDefaultAsync(x => x.Id == id);
+
             if (computadora == null)
-            {
                 return NotFound();
-            }
+
+            if (computadora.Empleado != null)
+                return UnprocessableEntity();
 
             _context.Computadoras.Remove(computadora);
             await _context.SaveChangesAsync();
