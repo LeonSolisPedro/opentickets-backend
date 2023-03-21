@@ -30,6 +30,8 @@ namespace opentickets_backend.Data
 
 
         public List<Ticket>? Tickets { get; set; }
+
+        public Empleado? Empleado { get; set; }
     }
 }
 

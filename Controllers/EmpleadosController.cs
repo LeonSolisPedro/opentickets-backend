@@ -39,7 +39,7 @@ namespace opentickets_backend.Controllers
           {
               return NotFound();
           }
-            var empleado = await _context.Empleados.FindAsync(id);
+            var empleado = await _context.Empleados.Include(x => x.Computadora).FirstOrDefaultAsync(x => x.Id == id);
 
             if (empleado == null)
             {
@@ -85,10 +85,10 @@ namespace opentickets_backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Empleado>> PostEmpleado(Empleado empleado)
         {
-          if (_context.Empleados == null)
-          {
-              return Problem("Entity set 'OpenTicketsContext.Empleados'  is null.");
-          }
+
+            if (_context.Empleados.Any(x => x.IdComputadora == empleado.IdComputadora))
+                return UnprocessableEntity();
+
             _context.Empleados.Add(empleado);
             await _context.SaveChangesAsync();
 

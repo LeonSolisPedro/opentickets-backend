@@ -51,12 +51,20 @@ namespace opentickets_backend.Controllers
             return computadora;
         }
 
-        [Route("GetTicketsPorCompu/{id}")]
+
+        [Route("GetComputadorasDropdown")]
         [HttpGet]
-        public async Task<List<Ticket>> GetTicketsPorCompu(int id)
+        public async Task<dynamic> GetComputadorasDropdown(string? empleados)
         {
-            var tickets = await _context.Computadoras.Include(x => x.Tickets)!.ThenInclude(x => x.Solucion).FirstOrDefaultAsync(x => x.Id == id);
-            return tickets?.Tickets ?? new List<Ticket>();
+            var lista = await _context.Computadoras.Include(x => x.Empleado).ToListAsync();
+
+            if (empleados == "asignados")
+                lista = lista.Where(x => x.Empleado != null).ToList();
+
+            if (empleados == "noasignados")
+                lista = lista.Where(x => x.Empleado == null).ToList();
+            
+            return lista.Select(x => new { NombreEmpleado = x.Empleado?.NombreEmpleado, NombreComputadora = x.MarcaModel, IdComputadora= x.Id });
         }
 
         // PUT: /Computadoras/5
@@ -109,15 +117,13 @@ namespace opentickets_backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComputadora(int id)
         {
-            if (_context.Computadoras == null)
-            {
-                return NotFound();
-            }
-            var computadora = await _context.Computadoras.FindAsync(id);
+            var computadora = await _context.Computadoras.Include(x => x.Empleado).FirstOrDefaultAsync(x => x.Id == id);
+
             if (computadora == null)
-            {
                 return NotFound();
-            }
+
+            if (computadora.Empleado != null)
+                return UnprocessableEntity();
 
             _context.Computadoras.Remove(computadora);
             await _context.SaveChangesAsync();
