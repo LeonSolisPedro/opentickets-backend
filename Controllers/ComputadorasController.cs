@@ -64,7 +64,7 @@ namespace opentickets_backend.Controllers
             if (empleados == "noasignados")
                 lista = lista.Where(x => x.Empleado == null).ToList();
             
-            return lista.Select(x => new { NombreEmpleado = x.Empleado?.NombreEmpleado, NombreComputadora = x.MarcaModel });
+            return lista.Select(x => new { NombreEmpleado = x.Empleado?.NombreEmpleado, NombreComputadora = x.MarcaModel, IdComputadora= x.Id });
         }
 
         // PUT: /Computadoras/5
