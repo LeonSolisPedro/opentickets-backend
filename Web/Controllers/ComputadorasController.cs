@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure.Context;
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using opentickets_backend.Data;
 
-namespace opentickets_backend.Controllers
+namespace Web.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -25,10 +26,10 @@ namespace opentickets_backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Computadora>>> GetComputadoras()
         {
-          if (_context.Computadoras == null)
-          {
-              return NotFound();
-          }
+            if (_context.Computadoras == null)
+            {
+                return NotFound();
+            }
             return await _context.Computadoras.ToListAsync();
         }
 
@@ -37,10 +38,10 @@ namespace opentickets_backend.Controllers
         [HttpGet]
         public async Task<ActionResult<Computadora>> GetComputadora(int id)
         {
-          if (_context.Computadoras == null)
-          {
-              return NotFound();
-          }
+            if (_context.Computadoras == null)
+            {
+                return NotFound();
+            }
             var computadora = await _context.Computadoras.FindAsync(id);
 
             if (computadora == null)
@@ -63,8 +64,8 @@ namespace opentickets_backend.Controllers
 
             if (empleados == "noasignados")
                 lista = lista.Where(x => x.Empleado == null).ToList();
-            
-            return lista.Select(x => new { NombreEmpleado = x.Empleado?.NombreEmpleado, NombreComputadora = x.MarcaModel, IdComputadora= x.Id });
+
+            return lista.Select(x => new { NombreEmpleado = x.Empleado?.NombreEmpleado, NombreComputadora = x.MarcaModel, IdComputadora = x.Id });
         }
 
         // PUT: /Computadoras/5
@@ -103,10 +104,10 @@ namespace opentickets_backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Computadora>> PostComputadora(Computadora computadora)
         {
-          if (_context.Computadoras == null)
-          {
-              return Problem("Entity set 'OpenTicketsContext.Computadoras'  is null.");
-          }
+            if (_context.Computadoras == null)
+            {
+                return Problem("Entity set 'OpenTicketsContext.Computadoras'  is null.");
+            }
             _context.Computadoras.Add(computadora);
             await _context.SaveChangesAsync();
 

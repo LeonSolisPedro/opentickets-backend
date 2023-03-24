@@ -4,16 +4,16 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:36994",
+      "applicationUrl": "http://localhost:30544",
       "sslPort": 0
     }
   },
   "profiles": {
-    "opentickets_backend": {
+    "Web": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "empleados",
-      "applicationUrl": "http://localhost:5290",
+      "applicationUrl": "http://localhost:5083",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

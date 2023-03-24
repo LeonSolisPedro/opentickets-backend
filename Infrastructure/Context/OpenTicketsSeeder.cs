@@ -1,17 +1,23 @@
-﻿using System;
+﻿using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
-using static opentickets_backend.Data.Enums;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static Infrastructure.Enums.Enums;
 
-namespace opentickets_backend.Data
+namespace Infrastructure.Context
 {
-    public static class Seeder
+    public static class OpenTicketsSeeder
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new OpenTicketsContext(serviceProvider.GetRequiredService<DbContextOptions<OpenTicketsContext>>()))
             {
                 // Si hay computadoras, ya no continues
-                if (context.Computadoras.Any()) 
+                if (context.Computadoras.Any())
                     return;
 
                 var computadora1 = new Computadora
@@ -26,6 +32,7 @@ namespace opentickets_backend.Data
                 };
 
                 context.Computadoras.Add(computadora1);
+                context.SaveChanges();
 
                 var empleado1 = new Empleado
                 {
@@ -34,12 +41,10 @@ namespace opentickets_backend.Data
                     NombreDepartamento = "Ventas"
                 };
 
-                
-                context.Empleados.Add(empleado1);
 
+                context.Empleados.Add(empleado1);
                 context.SaveChanges();
             }
         }
     }
 }
-

@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
+using Infrastructure.Context;
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using opentickets_backend.Data;
 
-namespace opentickets_backend.Controllers
+namespace Web.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -26,10 +26,10 @@ namespace opentickets_backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
         {
-          if (_context.Tickets == null)
-          {
-              return NotFound();
-          }
+            if (_context.Tickets == null)
+            {
+                return NotFound();
+            }
             return await _context.Tickets.ToListAsync();
         }
 
@@ -38,10 +38,10 @@ namespace opentickets_backend.Controllers
         [HttpGet]
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
-          if (_context.Tickets == null)
-          {
-              return NotFound();
-          }
+            if (_context.Tickets == null)
+            {
+                return NotFound();
+            }
             var ticket = await _context.Tickets.FindAsync(id);
 
             if (ticket == null)
@@ -98,10 +98,10 @@ namespace opentickets_backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Ticket>> CrearTicket(Ticket ticket)
         {
-          if (_context.Tickets == null)
-          {
-              return Problem("Entity set 'OpenTicketsContext.Tickets'  is null.");
-          }
+            if (_context.Tickets == null)
+            {
+                return Problem("Entity set 'OpenTicketsContext.Tickets'  is null.");
+            }
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
 

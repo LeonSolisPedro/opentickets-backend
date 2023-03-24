@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace opentickets_backend.Data
+namespace Infrastructure.Models
 {
 	public class Solucion
 	{

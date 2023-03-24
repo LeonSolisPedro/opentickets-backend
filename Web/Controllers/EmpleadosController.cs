@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure.Context;
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using opentickets_backend.Data;
 
-namespace opentickets_backend.Controllers
+namespace Web.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -24,10 +25,10 @@ namespace opentickets_backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleados()
         {
-          if (_context.Empleados == null)
-          {
-              return NotFound();
-          }
+            if (_context.Empleados == null)
+            {
+                return NotFound();
+            }
             return await _context.Empleados.ToListAsync();
         }
 
@@ -35,10 +36,10 @@ namespace opentickets_backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Empleado>> GetEmpleado(int id)
         {
-          if (_context.Empleados == null)
-          {
-              return NotFound();
-          }
+            if (_context.Empleados == null)
+            {
+                return NotFound();
+            }
             var empleado = await _context.Empleados.Include(x => x.Computadora).FirstOrDefaultAsync(x => x.Id == id);
 
             if (empleado == null)

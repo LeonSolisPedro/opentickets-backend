@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using static opentickets_backend.Data.Enums;
+using static Infrastructure.Enums.Enums;
 
-namespace opentickets_backend.Data
+namespace Infrastructure.Models
 {
 	public class Computadora
 	{
