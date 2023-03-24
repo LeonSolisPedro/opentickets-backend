@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static Infrastructure.Enums.Enums;
 
-namespace opentickets_backend.Data
+namespace Infrastructure.Models
 {
-	public class Empleado
+	public class Ticket
 	{
         [Key]
         public int Id { get; set; }
@@ -13,11 +14,14 @@ namespace opentickets_backend.Data
         public int IdComputadora { get; set; }
         public Computadora? Computadora { get; set; }
 
-        [Required]
-        public string NombreEmpleado { get; set; } = "";
+        public Prioridad Prioridad { get; set; }
 
         [Required]
-        public string NombreDepartamento { get; set; } = "";
+        public string DescripcionProblema { get; set; } = "";
+
+        //Despues, implementar quien era el empleado con idEmpleado
+
+        public Solucion? Solucion { get; set; }
 
     }
 }

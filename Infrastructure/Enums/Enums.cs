@@ -1,5 +1,5 @@
 ﻿using System;
-namespace opentickets_backend.Data
+namespace Infrastructure.Enums
 {
     public class Enums
     {
