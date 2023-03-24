@@ -13,8 +13,9 @@ builder.Services.AddControllers()
 builder.Services.AddDbContext<OpenTicketsContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors(options => options.AddPolicy("AllowWebApp", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
-builder.Services.AddScoped<IComputadoraService, ComputadoraService>();
 builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IComputadoraService, ComputadoraService>();
+
 
 
 // Configure the app
