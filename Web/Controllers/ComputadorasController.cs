@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationCore.IServices;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
@@ -15,10 +16,12 @@ namespace Web.Controllers
     public class ComputadorasController : ControllerBase
     {
         private readonly OpenTicketsContext _context;
+        private readonly IComputadoraService _computadoraService;
 
-        public ComputadorasController(OpenTicketsContext context)
+        public ComputadorasController(OpenTicketsContext context, IComputadoraService computadoraService)
         {
             _context = context;
+            _computadoraService = computadoraService;
         }
 
         // GET: /Computadoras

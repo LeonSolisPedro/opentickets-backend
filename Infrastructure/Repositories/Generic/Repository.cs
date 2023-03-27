@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Context;
+using Infrastructure.Repositories.Computadoras;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Generic
 {
-    //This is an Unit Of Work Implementation
-    //See: https://t.ly/mf9W, https://t.ly/-bTA
-    //And: https://t.ly/NC8S
+    // This is an Unit Of Work Implementation.
+    // Ef core already implements Unit Of Work
+    // but we're making this, so our code is
+    // better to read and maintain.
+    // See: https://t.ly/mf9W, https://t.ly/-bTA
+    // And: https://t.ly/NC8S, https://t.ly/HXnk
     public class Repository : IRepository
     {
 
@@ -28,16 +32,5 @@ namespace Infrastructure.Repositories.Generic
         }
 
         public ComputadorasRepository Computadoras { get; private set; }
-
-        public int SaveChanges()
-        {
-            return _context.SaveChanges();
-        }
-
-
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
     }
 }
