@@ -26,10 +26,7 @@ namespace Infrastructure.Repositories.Generic
             Computadoras = new ComputadorasRepository(context);
         }
 
-        public GenericRepository<TEntity> Generic<TEntity>() where TEntity : class
-        {
-            return new GenericRepository<TEntity>(_context);
-        }
+        public GenericRepository<TEntity> Generic<TEntity>() where TEntity : class { return new GenericRepository<TEntity>(_context); }
 
         public ComputadorasRepository Computadoras { get; private set; }
     }

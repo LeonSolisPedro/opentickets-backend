@@ -17,12 +17,12 @@ namespace ApplicationCore.IServices.CRUD
             _logger = logger;
         }
 
-        public async Task<List<TEntity>> GetList()
+        public async Task<List<TEntity>> GetList(string relationships = "")
         {
             var list = new List<TEntity>();
             try
             {
-                list = await _repo.Generic<TEntity>().GetList();
+                list = await _repo.Generic<TEntity>().GetList(relationships);
             }
             catch (Exception e)
             {
@@ -31,12 +31,26 @@ namespace ApplicationCore.IServices.CRUD
             return list;
         }
 
-        public async Task<TEntity> Get(int id)
+        public async Task<TEntity> Get(int id, string relationships = "")
         {
             var model = new TEntity();
             try
             {
-                model = await _repo.Generic<TEntity>().BuscarPorId(id);
+                model = await _repo.Generic<TEntity>().GetOrNull(id, relationships) ?? new TEntity();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+            }
+            return model;
+        }
+
+        public async Task<TEntity?> GetOrNull(int id, string relationships = "")
+        {
+            var model = default(TEntity);
+            try
+            {
+                model = await _repo.Generic<TEntity>().GetOrNull(id, relationships);
             }
             catch (Exception e)
             {
@@ -50,12 +64,9 @@ namespace ApplicationCore.IServices.CRUD
             var response = new Response();
             try
             {
-                if (await _repo.Generic<TEntity>().Create(entity) > 0)
-                {
-                    response.Success = true;
-                    response.Message = "Agregado correctamente";
-                    return response;
-                }
+                await _repo.Generic<TEntity>().Create(entity);
+                response.Success = true;
+                response.Message = "Agregado correctamente";
             }
             catch (Exception e)
             {
@@ -69,12 +80,9 @@ namespace ApplicationCore.IServices.CRUD
             var response = new Response();
             try
             {
-                if (await _repo.Generic<TEntity>().Update(entity) > 0)
-                {
-                    response.Success = true;
-                    response.Message = "Actualizado correctamente";
-                    return response;
-                }
+                await _repo.Generic<TEntity>().Update(entity);
+                response.Success = true;
+                response.Message = "Actualizado correctamente";
             }
             catch (Exception e)
             {
@@ -83,24 +91,43 @@ namespace ApplicationCore.IServices.CRUD
             return response;
         }
 
-        public async Task<Response> Delete(int id)
+        public async Task<Response> Delete(int id, string relationships = "", string dependant = "")
         {
             var response = new Response();
             try
             {
-                var entity = await _repo.Generic<TEntity>().BuscarPorId(id);
-                if (await _repo.Generic<TEntity>().Delete(entity) > 0)
+                var model = await _repo.Generic<TEntity>().GetOrNull(id, relationships) ?? new TEntity();
+                if(dependant != "")
                 {
-                    response.Success = true;
-                    response.Message = "Eliminado correctamente";
-                    return response;
+                    if(PropertyExists(model, dependant) != null)
+                    {
+                        response.Message = "El elemento está asignado a otros elementos, lo que evita su eliminación.";
+                        return response;
+                    }
                 }
+                await _repo.Generic<TEntity>().Delete(model);
+                response.Success = true;
+                response.Message = "Eliminado correctamente";
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
             return response;
+        }
+
+        private object? PropertyExists(object src, string propName)
+        {
+            if (propName.Contains("."))//complex type nested
+            {
+                var temp = propName.Split(new char[] { '.' }, 2);
+                return PropertyExists(PropertyExists(src, temp[0])!, temp[1]);
+            }
+            else
+            {
+                var prop = src?.GetType()?.GetProperty(propName);
+                return prop != null ? prop.GetValue(src, null) : null;
+            }
         }
     }
 }
