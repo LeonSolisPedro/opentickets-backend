@@ -1,9 +1,11 @@
 ﻿using ApplicationCore.Helpers;
 using ApplicationCore.IServices;
+using ApplicationCore.IServices.CRUD;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Infrastructure.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +18,12 @@ namespace ApplicationCore.Services
     {
 
         private readonly IRepository _repo;
+        private readonly ILogger<ComputadoraService> _logger;
 
-        public ComputadoraService(IRepository repo): base(repo)
+        public ComputadoraService(IRepository repo, ILogger<ComputadoraService> logger) : base(repo, logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public Task<List<Computadora>> GetComputadorasDropdown(string? empleados)

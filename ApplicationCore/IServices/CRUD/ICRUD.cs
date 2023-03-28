@@ -1,8 +1,10 @@
 ﻿using System;
-namespace ApplicationCore.Helpers
+using ApplicationCore.Helpers;
+
+namespace ApplicationCore.IServices.CRUD
 {
-	public interface ICRUD<TEntity> where TEntity: class
-	{
+	public interface ICRUD<TEntity> where TEntity : class, new()
+    {
         Task<List<TEntity>> GetList();
         Task<TEntity> Get(int id);
         Task<Response> Create(TEntity entity);
