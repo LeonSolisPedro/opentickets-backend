@@ -15,6 +15,8 @@ builder.Services.AddDbContext<OpenTicketsContext>(opt =>
 builder.Services.AddCors(options => options.AddPolicy("AllowWebApp", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IComputadoraService, ComputadoraService>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 
 
 

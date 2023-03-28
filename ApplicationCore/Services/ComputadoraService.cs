@@ -7,6 +7,7 @@ using Infrastructure.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,16 +27,31 @@ namespace ApplicationCore.Services
             _logger = logger;
         }
 
-        public Task<List<Computadora>> GetComputadorasDropdown(string? empleados)
+        public async Task<List<Computadora>> GetComputadorasDropdown(string? empleados)
         {
-            throw new NotImplementedException();
+            var list = new List<Computadora>();
+            try
+            {
+                list = await _repo.Generic<Computadora>().GetList("Empleado");
+
+                if (empleados == "asignados")
+                    list = list.Where(x => x.Empleado != null).ToList();
+
+                if (empleados == "noasignados")
+                    list = list.Where(x => x.Empleado == null).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+            }
+            return list;
         }
 
         public async Task<string> SayHi()
         {
             var uwu = await _repo.Computadoras.GetPrimerCompu();
             var hayvoy = await _repo.Generic<Computadora>().GetList();
-            return $"Holi from Computadora Service: {uwu.MarcaModel} - Count: {hayvoy.Count}";
+            return $"Hello from Computadora Service: {uwu.MarcaModel} - Count: {hayvoy.Count}";
         }
     }
 }
