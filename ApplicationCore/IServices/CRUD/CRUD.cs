@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using ApplicationCore.Helpers;
 using Infrastructure.Models;
 using Infrastructure.Repositories.Generic;
@@ -59,11 +60,20 @@ namespace ApplicationCore.IServices.CRUD
             return model;
         }
 
-        public async Task<Response> Create(TEntity entity)
+        public async Task<Response> Create(TEntity entity, Expression<Func<TEntity, bool>>? nameExists = null)
         {
             var response = new Response();
             try
             {
+                if(nameExists != null)
+                {
+                    var exists = await _repo.Generic<TEntity>().ElementExists(nameExists);
+                    if (exists)
+                    {
+                        response.Message = "Ya existe un elemento con este nombre, intente con uno nuevo";
+                        return response;
+                    }
+                }
                 await _repo.Generic<TEntity>().Create(entity);
                 response.Success = true;
                 response.Message = "Agregado correctamente";
@@ -75,11 +85,20 @@ namespace ApplicationCore.IServices.CRUD
             return response;
         }
 
-        public async Task<Response> Update(TEntity entity)
+        public async Task<Response> Update(TEntity entity, Expression<Func<TEntity, bool>>? nameExists = null)
         {
             var response = new Response();
             try
             {
+                if (nameExists != null)
+                {
+                    var exists = await _repo.Generic<TEntity>().ElementExists(nameExists);
+                    if (exists)
+                    {
+                        response.Message = "Ya existe un elemento con este nombre, intente con uno nuevo";
+                        return response;
+                    }
+                }
                 await _repo.Generic<TEntity>().Update(entity);
                 response.Success = true;
                 response.Message = "Actualizado correctamente";
@@ -101,7 +120,7 @@ namespace ApplicationCore.IServices.CRUD
                 {
                     if(PropertyExists(model, dependant) != null)
                     {
-                        response.Message = "El elemento está asignado a otros elementos, lo que evita su eliminación.";
+                        response.Message = "El elemento está asignado a otros elementos, lo que evita su eliminación";
                         return response;
                     }
                 }
