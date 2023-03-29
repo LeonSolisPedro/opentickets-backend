@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationCore.IServices;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
@@ -14,11 +15,11 @@ namespace Web.Controllers
     [ApiController]
     public class ComputadorasController : ControllerBase
     {
-        private readonly OpenTicketsContext _context;
+        private readonly IComputadoraService _computadoraService;
 
-        public ComputadorasController(OpenTicketsContext context)
+        public ComputadorasController(IComputadoraService computadoraService)
         {
-            _context = context;
+            _computadoraService = computadoraService;
         }
 
         // GET: /Computadoras
@@ -26,11 +27,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Computadora>>> GetComputadoras()
         {
-            if (_context.Computadoras == null)
-            {
-                return NotFound();
-            }
-            return await _context.Computadoras.ToListAsync();
+            return await _computadoraService.GetList();
         }
 
         // GET: /Computadoras/5
@@ -38,17 +35,9 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult<Computadora>> GetComputadora(int id)
         {
-            if (_context.Computadoras == null)
-            {
-                return NotFound();
-            }
-            var computadora = await _context.Computadoras.FindAsync(id);
-
+            var computadora = await _computadoraService.GetOrNull(id);
             if (computadora == null)
-            {
                 return NotFound();
-            }
-
             return computadora;
         }
 
@@ -57,15 +46,15 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<dynamic> GetComputadorasDropdown(string? empleados)
         {
-            var lista = await _context.Computadoras.Include(x => x.Empleado).ToListAsync();
+            var list = await _computadoraService.GetComputadorasDropdown(empleados);
+            return list.Select(x => new { NombreEmpleado = x.Empleado?.NombreEmpleado, NombreComputadora = x.MarcaModel, IdComputadora = x.Id });
+        }
 
-            if (empleados == "asignados")
-                lista = lista.Where(x => x.Empleado != null).ToList();
-
-            if (empleados == "noasignados")
-                lista = lista.Where(x => x.Empleado == null).ToList();
-
-            return lista.Select(x => new { NombreEmpleado = x.Empleado?.NombreEmpleado, NombreComputadora = x.MarcaModel, IdComputadora = x.Id });
+        [Route("SayHi")]
+        [HttpGet]
+        public async Task<string> SayHi()
+        {
+            return await _computadoraService.SayHi();
         }
 
         // PUT: /Computadoras/5
@@ -74,27 +63,12 @@ namespace Web.Controllers
         public async Task<ActionResult<Computadora>> PutComputadora(int id, Computadora computadora)
         {
             if (id != computadora.Id)
-            {
                 return BadRequest();
-            }
 
-            _context.Entry(computadora).State = EntityState.Modified;
+            var response = await _computadoraService.Update(computadora);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ComputadoraExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            if (response.Success == false)
+                return UnprocessableEntity();
 
             return computadora;
         }
@@ -104,37 +78,24 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<ActionResult<Computadora>> PostComputadora(Computadora computadora)
         {
-            if (_context.Computadoras == null)
-            {
-                return Problem("Entity set 'OpenTicketsContext.Computadoras'  is null.");
-            }
-            _context.Computadoras.Add(computadora);
-            await _context.SaveChangesAsync();
+            var response = await _computadoraService.Create(computadora);
 
-            return CreatedAtAction("GetComputadora", new { id = computadora.Id }, computadora);
+            if (response.Success == false)
+                return UnprocessableEntity();
+
+            return computadora;
         }
 
         // DELETE: /Computadoras/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComputadora(int id)
         {
-            var computadora = await _context.Computadoras.Include(x => x.Empleado).FirstOrDefaultAsync(x => x.Id == id);
+            var response = await _computadoraService.Delete(id, "Empleado", "Empleado");
 
-            if (computadora == null)
-                return NotFound();
-
-            if (computadora.Empleado != null)
+            if (response.Success == false)
                 return UnprocessableEntity();
 
-            _context.Computadoras.Remove(computadora);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool ComputadoraExists(int id)
-        {
-            return (_context.Computadoras?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

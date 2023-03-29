@@ -27,13 +27,14 @@ namespace Infrastructure.Context
     {
         public OpenTicketsContext CreateDbContext(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
+            //var configuration = new ConfigurationBuilder()
+            //    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            //    .AddJsonFile("appsettings.json")
+            //    .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<OpenTicketsContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            //optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseInMemoryDatabase("opentickets");
 
             return new OpenTicketsContext(optionsBuilder.Options);
         }

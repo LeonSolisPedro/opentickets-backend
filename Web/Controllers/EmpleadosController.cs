@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationCore.IServices;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
@@ -14,39 +15,27 @@ namespace Web.Controllers
     [ApiController]
     public class EmpleadosController : ControllerBase
     {
-        private readonly OpenTicketsContext _context;
+        private readonly IEmpleadoService _empleadoService;
 
-        public EmpleadosController(OpenTicketsContext context)
+        public EmpleadosController(IEmpleadoService empleadoService)
         {
-            _context = context;
+            _empleadoService = empleadoService;
         }
 
         // GET: api/Empleados
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleados()
         {
-            if (_context.Empleados == null)
-            {
-                return NotFound();
-            }
-            return await _context.Empleados.ToListAsync();
+            return await _empleadoService.GetList();
         }
 
         // GET: api/Empleados/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Empleado>> GetEmpleado(int id)
         {
-            if (_context.Empleados == null)
-            {
-                return NotFound();
-            }
-            var empleado = await _context.Empleados.Include(x => x.Computadora).FirstOrDefaultAsync(x => x.Id == id);
-
+            var empleado = await _empleadoService.GetOrNull(id, "Computadora");
             if (empleado == null)
-            {
                 return NotFound();
-            }
-
             return empleado;
         }
 
@@ -56,27 +45,12 @@ namespace Web.Controllers
         public async Task<ActionResult<Empleado>> PutEmpleado(int id, Empleado empleado)
         {
             if (id != empleado.Id)
-            {
                 return BadRequest();
-            }
 
-            _context.Entry(empleado).State = EntityState.Modified;
+            var response = await _empleadoService.Update(empleado);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmpleadoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            if (response.Success == false)
+                return UnprocessableEntity();
 
             return empleado;
         }
@@ -87,38 +61,24 @@ namespace Web.Controllers
         public async Task<ActionResult<Empleado>> PostEmpleado(Empleado empleado)
         {
 
-            if (_context.Empleados.Any(x => x.IdComputadora == empleado.IdComputadora))
+            var response = await _empleadoService.Create(empleado);
+
+            if (response.Success == false)
                 return UnprocessableEntity();
 
-            _context.Empleados.Add(empleado);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetEmpleado", new { id = empleado.Id }, empleado);
+            return empleado;
         }
 
         // DELETE: api/Empleados/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmpleado(int id)
         {
-            if (_context.Empleados == null)
-            {
-                return NotFound();
-            }
-            var empleado = await _context.Empleados.FindAsync(id);
-            if (empleado == null)
-            {
-                return NotFound();
-            }
+            var response = await _empleadoService.Delete(id);
 
-            _context.Empleados.Remove(empleado);
-            await _context.SaveChangesAsync();
+            if (response.Success == false)
+                return UnprocessableEntity();
 
             return NoContent();
-        }
-
-        private bool EmpleadoExists(int id)
-        {
-            return (_context.Empleados?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

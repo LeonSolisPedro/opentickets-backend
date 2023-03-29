@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationCore.IServices;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
@@ -14,11 +15,11 @@ namespace Web.Controllers
     [ApiController]
     public class TicketsController : ControllerBase
     {
-        private readonly OpenTicketsContext _context;
+        private readonly ITicketService _ticketService;
 
-        public TicketsController(OpenTicketsContext context)
+        public TicketsController(ITicketService ticketService)
         {
-            _context = context;
+            _ticketService = ticketService;
         }
 
         // GET: api/Tickets
@@ -26,11 +27,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
         {
-            if (_context.Tickets == null)
-            {
-                return NotFound();
-            }
-            return await _context.Tickets.ToListAsync();
+            return await _ticketService.GetList();
         }
 
         // GET: api/Tickets/5
@@ -38,17 +35,9 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
-            if (_context.Tickets == null)
-            {
-                return NotFound();
-            }
-            var ticket = await _context.Tickets.FindAsync(id);
-
+            var ticket = await _ticketService.GetOrNull(id);
             if (ticket == null)
-            {
                 return NotFound();
-            }
-
             return ticket;
         }
 
@@ -56,8 +45,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<List<Ticket>> GetTicketsPorIdCompu(int id)
         {
-            var tickets = await _context.Tickets.Include(x => x.Solucion).Where(x => x.IdComputadora == id).ToListAsync();
-            return tickets;
+            return await _ticketService.GetTicketsPorIdCompu(id);
         }
 
         // PUT: api/Tickets/5
@@ -67,27 +55,12 @@ namespace Web.Controllers
         public async Task<ActionResult<Ticket>> ActualizarTicket(int id, Ticket ticket)
         {
             if (id != ticket.Id)
-            {
                 return BadRequest();
-            }
 
-            _context.Entry(ticket).State = EntityState.Modified;
+            var response = await _ticketService.Update(ticket);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TicketExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            if (response.Success == false)
+                return UnprocessableEntity();
 
             return ticket;
         }
@@ -98,14 +71,12 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<ActionResult<Ticket>> CrearTicket(Ticket ticket)
         {
-            if (_context.Tickets == null)
-            {
-                return Problem("Entity set 'OpenTicketsContext.Tickets'  is null.");
-            }
-            _context.Tickets.Add(ticket);
-            await _context.SaveChangesAsync();
+            var response = await _ticketService.Create(ticket);
 
-            return CreatedAtAction("GetTicket", new { id = ticket.Id }, ticket);
+            if (response.Success == false)
+                return UnprocessableEntity();
+
+            return ticket;
         }
 
 
@@ -118,11 +89,10 @@ namespace Web.Controllers
             if (id != solucion.IdTicket)
                 return BadRequest();
 
-            if (_context.Soluciones.Any(x => x.IdTicket == id))
-                return UnprocessableEntity();
+            var response = await _ticketService.AgregarSolucion(solucion);
 
-            _context.Soluciones.Add(solucion);
-            await _context.SaveChangesAsync();
+            if (response.Success == false)
+                return UnprocessableEntity();
 
             return solucion;
         }
@@ -132,25 +102,12 @@ namespace Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> EliminarTicket(int id)
         {
-            if (_context.Tickets == null)
-            {
-                return NotFound();
-            }
-            var ticket = await _context.Tickets.FindAsync(id);
-            if (ticket == null)
-            {
-                return NotFound();
-            }
+            var response = await _ticketService.Delete(id);
 
-            _context.Tickets.Remove(ticket);
-            await _context.SaveChangesAsync();
+            if (response.Success == false)
+                return UnprocessableEntity();
 
             return NoContent();
-        }
-
-        private bool TicketExists(int id)
-        {
-            return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
