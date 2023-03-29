@@ -34,6 +34,7 @@ namespace Infrastructure.Repositories.Generic
 
         public async Task<int> Update(TEntity entity)
         {
+            _context.Entry(entity).State = EntityState.Modified;
             entities.Update(entity);
             return await _context.SaveChangesAsync();
         }
