@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.IServices;
+using ApplicationCore.IServices.Generic;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
@@ -15,25 +16,25 @@ namespace Web.Controllers
     [ApiController]
     public class EmpleadosController : ControllerBase
     {
-        private readonly IEmpleadoService _empleadoService;
+        private readonly IGenericService<Empleado> _genericService;
 
-        public EmpleadosController(IEmpleadoService empleadoService)
+        public EmpleadosController(IGenericService<Empleado> genericService)
         {
-            _empleadoService = empleadoService;
+            _genericService = genericService;
         }
 
         // GET: api/Empleados
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleados()
         {
-            return await _empleadoService.GetList();
+            return await _genericService.GetList();
         }
 
         // GET: api/Empleados/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Empleado>> GetEmpleado(int id)
         {
-            var empleado = await _empleadoService.GetOrNull(id, "Computadora");
+            var empleado = await _genericService.GetOrNull(id, "Computadora");
             if (empleado == null)
                 return NotFound();
             return empleado;
@@ -47,7 +48,7 @@ namespace Web.Controllers
             if (id != empleado.Id)
                 return BadRequest();
 
-            var response = await _empleadoService.Update(empleado);
+            var response = await _genericService.Update(empleado);
 
             if (response.Success == false)
                 return UnprocessableEntity();
@@ -61,7 +62,7 @@ namespace Web.Controllers
         public async Task<ActionResult<Empleado>> PostEmpleado(Empleado empleado)
         {
 
-            var response = await _empleadoService.Create(empleado);
+            var response = await _genericService.Create(empleado);
 
             if (response.Success == false)
                 return UnprocessableEntity();
@@ -73,7 +74,7 @@ namespace Web.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmpleado(int id)
         {
-            var response = await _empleadoService.Delete(id);
+            var response = await _genericService.Delete(id);
 
             if (response.Success == false)
                 return UnprocessableEntity();

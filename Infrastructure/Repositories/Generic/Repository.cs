@@ -23,11 +23,11 @@ namespace Infrastructure.Repositories.Generic
         public Repository(OpenTicketsContext context)
         {
             _context = context;
-            Computadoras = new ComputadorasRepository(context);
+            Computadoras = new ComputadoraRepository(context);
         }
 
         public GenericRepository<TEntity> Generic<TEntity>() where TEntity : class { return new GenericRepository<TEntity>(_context); }
 
-        public ComputadorasRepository Computadoras { get; private set; }
+        public ComputadoraRepository Computadoras { get; private set; }
     }
 }
