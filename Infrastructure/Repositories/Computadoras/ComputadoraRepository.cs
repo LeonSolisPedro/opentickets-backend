@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Computadoras
 {
-    public class ComputadorasRepository
+    public class ComputadoraRepository
     {
 
         private readonly OpenTicketsContext _context;
         
-        public ComputadorasRepository(OpenTicketsContext context)
+        public ComputadoraRepository(OpenTicketsContext context)
         {
             _context = context;
         }

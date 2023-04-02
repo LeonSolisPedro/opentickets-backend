@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Helpers;
 using ApplicationCore.IServices;
-using ApplicationCore.IServices.CRUD;
+using ApplicationCore.IServices.Generic;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Infrastructure.Repositories.Generic;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
 {
-    public class ComputadoraService : CRUD<Computadora>, IComputadoraService
+    public class ComputadoraService : GenericService<Computadora>, IComputadoraService
     {
 
         private readonly IRepository _repo;

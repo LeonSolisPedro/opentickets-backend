@@ -5,14 +5,14 @@ using Infrastructure.Models;
 using Infrastructure.Repositories.Generic;
 using Microsoft.Extensions.Logging;
 
-namespace ApplicationCore.IServices.CRUD
+namespace ApplicationCore.IServices.Generic
 {
-	public class CRUD<TEntity> : ICRUD<TEntity> where TEntity : class, new()
+	public class GenericService<TEntity> : IGenericService<TEntity> where TEntity : class, new()
     {
         private readonly IRepository _repo;
-        private readonly ILogger _logger;
+        private readonly ILogger<GenericService<TEntity>> _logger;
 
-        public CRUD(IRepository repo, ILogger logger)
+        public GenericService(IRepository repo, ILogger<GenericService<TEntity>> logger)
         {
             _repo = repo;
             _logger = logger;
@@ -76,7 +76,7 @@ namespace ApplicationCore.IServices.CRUD
                 }
                 await _repo.Generic<TEntity>().Create(entity);
                 response.Success = true;
-                response.Message = "Agregado correctamente";
+                response.Message = "Elemento agregado correctamente";
             }
             catch (Exception e)
             {
@@ -101,7 +101,7 @@ namespace ApplicationCore.IServices.CRUD
                 }
                 await _repo.Generic<TEntity>().Update(entity);
                 response.Success = true;
-                response.Message = "Actualizado correctamente";
+                response.Message = "Elemento actualizado correctamente";
             }
             catch (Exception e)
             {
@@ -126,7 +126,7 @@ namespace ApplicationCore.IServices.CRUD
                 }
                 await _repo.Generic<TEntity>().Delete(model);
                 response.Success = true;
-                response.Message = "Eliminado correctamente";
+                response.Message = "Elemento eliminado correctamente";
             }
             catch (Exception e)
             {

@@ -17,6 +17,6 @@ namespace Infrastructure.Repositories.Generic
     {
         GenericRepository<T> Generic<T>() where T : class;
 
-        ComputadorasRepository Computadoras { get; }
+        ComputadoraRepository Computadoras { get; }
     }
 }

@@ -1,14 +1,14 @@
 using System;
 using ApplicationCore.Helpers;
 using ApplicationCore.IServices;
-using ApplicationCore.IServices.CRUD;
+using ApplicationCore.IServices.Generic;
 using Infrastructure.Models;
 using Infrastructure.Repositories.Generic;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationCore.Services
 {
-    public class TicketService : CRUD<Ticket>, ITicketService
+    public class TicketService : GenericService<Ticket>, ITicketService
     {
         private readonly IRepository _repo;
         private readonly ILogger<TicketService> _logger;
