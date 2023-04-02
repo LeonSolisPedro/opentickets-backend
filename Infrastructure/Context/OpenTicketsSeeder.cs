@@ -37,7 +37,7 @@ namespace Infrastructure.Context
                 var empleado1 = new Empleado
                 {
                     IdComputadora = computadora1.Id,
-                    NombreEmpleado = "Juan Diego",
+                    NombreEmpleado = "Juan Pancho",
                     NombreDepartamento = "Ventas"
                 };
 
