@@ -27,7 +27,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
         {
-            return await _ticketService.GetList();
+            return await _ticketService.GetList("Computadora,Computadora.Empleado");
         }
 
         // GET: api/Tickets/5
@@ -71,7 +71,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<ActionResult<Ticket>> CrearTicket(Ticket ticket)
         {
-            var response = await _ticketService.Create(ticket);
+            var response = await _ticketService.Create(ticket, null, "Computadora,Computadora.Empleado");
 
             if (response.Success == false)
                 return UnprocessableEntity();
@@ -95,19 +95,6 @@ namespace Web.Controllers
                 return UnprocessableEntity();
 
             return solucion;
-        }
-
-        // DELETE: api/Tickets/5
-        [Route("EliminarTicket/{id}")]
-        [HttpDelete]
-        public async Task<IActionResult> EliminarTicket(int id)
-        {
-            var response = await _ticketService.Delete(id);
-
-            if (response.Success == false)
-                return UnprocessableEntity();
-
-            return NoContent();
         }
     }
 }
