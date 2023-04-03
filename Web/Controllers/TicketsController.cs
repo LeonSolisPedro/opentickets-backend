@@ -71,7 +71,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<ActionResult<Ticket>> CrearTicket(Ticket ticket)
         {
-            var response = await _ticketService.Create(ticket, null, "Computadora,Computadora.Empleado");
+            var response = await _ticketService.Create(ticket);
 
             if (response.Success == false)
                 return UnprocessableEntity();

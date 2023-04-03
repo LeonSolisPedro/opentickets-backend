@@ -60,7 +60,7 @@ namespace ApplicationCore.IServices.Generic
             return model;
         }
 
-        public async Task<Response> Create(TEntity entity, Expression<Func<TEntity, bool>>? nameExists = null, string relationships = "")
+        public async Task<Response> Create(TEntity entity, Expression<Func<TEntity, bool>>? nameExists = null)
         {
             var response = new Response();
             try
@@ -75,8 +75,6 @@ namespace ApplicationCore.IServices.Generic
                     }
                 }
                 await _repo.Generic<TEntity>().Create(entity);
-                if (relationships != "")
-                    entity = await _repo.Generic<TEntity>().GetOrNull(x => x == entity);
                 response.Success = true;
                 response.Message = "Elemento agregado correctamente";
             }
@@ -87,7 +85,7 @@ namespace ApplicationCore.IServices.Generic
             return response;
         }
 
-        public async Task<Response> Update(TEntity entity, Expression<Func<TEntity, bool>>? nameExists = null, string relationships = "")
+        public async Task<Response> Update(TEntity entity, Expression<Func<TEntity, bool>>? nameExists = null)
         {
             var response = new Response();
             try
@@ -102,7 +100,6 @@ namespace ApplicationCore.IServices.Generic
                     }
                 }
                 await _repo.Generic<TEntity>().Update(entity);
-                
                 response.Success = true;
                 response.Message = "Elemento actualizado correctamente";
             }
