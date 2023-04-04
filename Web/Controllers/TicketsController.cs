@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ApplicationCore.IServices;
-using Infrastructure.Context;
-using Infrastructure.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using ApplicationCore.IServices.Generic;
+using Infrastructure.Models;
+using ApplicationCore.IServices;
 
 namespace Web.Controllers
 {
@@ -22,24 +16,25 @@ namespace Web.Controllers
             _ticketService = ticketService;
         }
 
-        // GET: api/Tickets
+
         [Route("GetTickets")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
+        public async Task<List<Ticket>> GetTickets()
         {
             return await _ticketService.GetList("Computadora,Computadora.Empleado");
         }
 
-        // GET: api/Tickets/5
-        [Route("GetTicket/{id}")]
+
+        [Route("GetTickets/{id}")]
         [HttpGet]
-        public async Task<ActionResult<Ticket>> GetTicket(int id)
+        public async Task<ActionResult<Ticket>> GetTickets(int id)
         {
             var ticket = await _ticketService.GetOrNull(id);
             if (ticket == null)
                 return NotFound();
             return ticket;
         }
+
 
         [Route("GetTicketsPorIdCompu/{id}")]
         [HttpGet]
@@ -48,11 +43,39 @@ namespace Web.Controllers
             return await _ticketService.GetTicketsPorIdCompu(id);
         }
 
-        // PUT: api/Tickets/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+        [Route("CrearTicket")]
+        [HttpPost]
+        public async Task<IActionResult> CrearTicket(Ticket ticket)
+        {
+            var response = await _ticketService.Create(ticket);
+
+            if (response.Success == false)
+                return UnprocessableEntity();
+
+            return Ok();
+        }
+
+
+        [Route("AgregarSolucion/{id}")]
+        [HttpPost]
+        public async Task<IActionResult> AgregarSolucion(int id, Solucion solucion)
+        {
+            if (id != solucion.IdTicket)
+                return BadRequest();
+
+            var response = await _ticketService.AgregarSolucion(solucion);
+
+            if (response.Success == false)
+                return UnprocessableEntity();
+
+            return Ok();
+        }
+
+
         [Route("ActualizarTicket/{id}")]
         [HttpPut]
-        public async Task<ActionResult<Ticket>> ActualizarTicket(int id, Ticket ticket)
+        public async Task<IActionResult> Put(int id, Ticket ticket)
         {
             if (id != ticket.Id)
                 return BadRequest();
@@ -62,39 +85,7 @@ namespace Web.Controllers
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return ticket;
-        }
-
-        // POST: api/Tickets
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Route("CrearTicket")]
-        [HttpPost]
-        public async Task<ActionResult<Ticket>> CrearTicket(Ticket ticket)
-        {
-            var response = await _ticketService.Create(ticket);
-
-            if (response.Success == false)
-                return UnprocessableEntity();
-
-            return ticket;
-        }
-
-
-        // POST: api/Tickets/AgregarSolucion/5
-        [Route("AgregarSolucion/{id}")]
-        [HttpPost]
-        public async Task<ActionResult<Solucion>> AgregarSolucion(int id, Solucion solucion)
-        {
-
-            if (id != solucion.IdTicket)
-                return BadRequest();
-
-            var response = await _ticketService.AgregarSolucion(solucion);
-
-            if (response.Success == false)
-                return UnprocessableEntity();
-
-            return solucion;
+            return Ok();
         }
     }
 }
