@@ -54,19 +54,19 @@ namespace Web.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post(Computadora computadora)
+        public async Task<ActionResult<Computadora>> Post(Computadora computadora)
         {
             var response = await _computadoraService.Create(computadora);
 
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return Ok();
+            return computadora;
         }
 
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Computadora computadora)
+        public async Task<ActionResult<Computadora>> Put(int id, Computadora computadora)
         {
             if (id != computadora.Id)
                 return BadRequest();
@@ -76,7 +76,7 @@ namespace Web.Controllers
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return Ok();
+            return computadora;
         }
 
         
