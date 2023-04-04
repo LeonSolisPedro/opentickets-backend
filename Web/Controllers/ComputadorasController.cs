@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ApplicationCore.IServices;
-using Infrastructure.Context;
-using Infrastructure.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using ApplicationCore.IServices.Generic;
+using Infrastructure.Models;
+using ApplicationCore.IServices;
 
 namespace Web.Controllers
 {
@@ -22,18 +16,18 @@ namespace Web.Controllers
             _computadoraService = computadoraService;
         }
 
-        // GET: /Computadoras
+
         [Route("GetComputadoras")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Computadora>>> GetComputadoras()
+        public async Task<List<Computadora>> GetComputadoras()
         {
             return await _computadoraService.GetList();
         }
 
-        // GET: /Computadoras/5
-        [Route("GetComputadora/{id}")]
+
+        [Route("GetComputadoras/{id}")]
         [HttpGet]
-        public async Task<ActionResult<Computadora>> GetComputadora(int id)
+        public async Task<ActionResult<Computadora>> GetComputadoras(int id)
         {
             var computadora = await _computadoraService.GetOrNull(id);
             if (computadora == null)
@@ -50,6 +44,7 @@ namespace Web.Controllers
             return list.Select(x => new { NombreEmpleado = x.Empleado?.NombreEmpleado, NombreComputadora = x.MarcaModel, IdComputadora = x.Id });
         }
 
+
         [Route("SayHi")]
         [HttpGet]
         public async Task<string> SayHi()
@@ -57,10 +52,21 @@ namespace Web.Controllers
             return await _computadoraService.SayHi();
         }
 
-        // PUT: /Computadoras/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+        [HttpPost]
+        public async Task<IActionResult> Post(Computadora computadora)
+        {
+            var response = await _computadoraService.Create(computadora);
+
+            if (response.Success == false)
+                return UnprocessableEntity();
+
+            return Ok();
+        }
+
+        
         [HttpPut("{id}")]
-        public async Task<ActionResult<Computadora>> PutComputadora(int id, Computadora computadora)
+        public async Task<IActionResult> Put(int id, Computadora computadora)
         {
             if (id != computadora.Id)
                 return BadRequest();
@@ -70,32 +76,19 @@ namespace Web.Controllers
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return computadora;
+            return Ok();
         }
 
-        // POST: /Computadoras
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Computadora>> PostComputadora(Computadora computadora)
-        {
-            var response = await _computadoraService.Create(computadora);
-
-            if (response.Success == false)
-                return UnprocessableEntity();
-
-            return computadora;
-        }
-
-        // DELETE: /Computadoras/5
+        
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteComputadora(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var response = await _computadoraService.Delete(id, "Empleado", "Empleado");
 
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return NoContent();
+            return Ok();
         }
     }
 }
