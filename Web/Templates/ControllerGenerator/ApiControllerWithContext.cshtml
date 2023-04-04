@@ -45,19 +45,19 @@ namespace @Model.ControllerNamespace
 
 
         [HttpPost]
-        public async Task<IActionResult> Post(@Model.ModelTypeName @Model.ModelVariable)
+        public async Task<ActionResult<@(Model.ModelTypeName)>> Post(@Model.ModelTypeName @Model.ModelVariable)
         {
             var response = await _genericService.Create(@Model.ModelVariable);
 
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return Ok();
+            return @Model.ModelVariable;
         }
 
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(@primaryKeyShortTypeName id, @Model.ModelTypeName @Model.ModelVariable)
+        public async Task<ActionResult<@(Model.ModelTypeName)>> Put(@primaryKeyShortTypeName id, @Model.ModelTypeName @Model.ModelVariable)
         {
             if (id != @(Model.ModelVariable).@primaryKeyName)
                 return BadRequest();
@@ -67,7 +67,7 @@ namespace @Model.ControllerNamespace
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return Ok();
+            return @Model.ModelVariable;
         }
 
         

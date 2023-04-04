@@ -46,20 +46,20 @@ namespace Web.Controllers
 
         [Route("CrearTicket")]
         [HttpPost]
-        public async Task<IActionResult> CrearTicket(Ticket ticket)
+        public async Task<ActionResult<Ticket>> CrearTicket(Ticket ticket)
         {
-            var response = await _ticketService.Create(ticket);
+            var response = await _ticketService.Create(ticket, null, "Computadora,Computadora.Empleado");
 
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return Ok();
+            return ticket;
         }
 
 
         [Route("AgregarSolucion/{id}")]
         [HttpPost]
-        public async Task<IActionResult> AgregarSolucion(int id, Solucion solucion)
+        public async Task<ActionResult<Solucion>> AgregarSolucion(int id, Solucion solucion)
         {
             if (id != solucion.IdTicket)
                 return BadRequest();
@@ -69,23 +69,23 @@ namespace Web.Controllers
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return Ok();
+            return solucion;
         }
 
 
         [Route("ActualizarTicket/{id}")]
         [HttpPut]
-        public async Task<IActionResult> Put(int id, Ticket ticket)
+        public async Task<ActionResult<Ticket>> Put(int id, Ticket ticket)
         {
             if (id != ticket.Id)
                 return BadRequest();
 
-            var response = await _ticketService.Update(ticket);
+            var response = await _ticketService.Update(ticket, null, "Computadora,Computadora.Empleado");
 
             if (response.Success == false)
                 return UnprocessableEntity();
 
-            return Ok();
+            return ticket;
         }
     }
 }
