@@ -34,29 +34,22 @@ namespace Web.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Empleado>> Post(Empleado empleado)
+        public async Task<IActionResult> Post(Empleado empleado)
         {
             var response = await _genericService.Create(empleado);
-
             if (response.Success == false)
                 return UnprocessableEntity();
-
-            return empleado;
+            return Ok();
         }
 
         
         [HttpPut("{id}")]
-        public async Task<ActionResult<Empleado>> Put(int id, Empleado empleado)
+        public async Task<IActionResult> Put(int id, Empleado empleado)
         {
-            if (id != empleado.Id)
-                return BadRequest();
-
             var response = await _genericService.Update(empleado);
-
             if (response.Success == false)
                 return UnprocessableEntity();
-
-            return empleado;
+            return Ok();
         }
 
         
@@ -64,10 +57,8 @@ namespace Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var response = await _genericService.Delete(id);
-
             if (response.Success == false)
                 return UnprocessableEntity();
-
             return Ok();
         }
     }
