@@ -4,7 +4,7 @@ using ApplicationCore.IServices.Generic;
 @{
     foreach (var namespaceName in Model.RequiredNamespaces)
     {
-@if (namespaceName == "Infrastructure.Context") continue;
+@if (namespaceName == "Infrastructure.Context") { continue; };
 @:using @namespaceName;
     }
 }
