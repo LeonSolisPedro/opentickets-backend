@@ -21,7 +21,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<List<Ticket>> GetTickets()
         {
-            return await _ticketService.GetList("Computadora,Computadora.Empleado");
+            return await _ticketService.GetList("Computadora,Computadora.Empleado,Solucion");
         }
 
 
@@ -29,7 +29,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult<Ticket>> GetTickets(int id)
         {
-            var ticket = await _ticketService.GetOrNull(id);
+            var ticket = await _ticketService.GetOrNull(id, "Solucion");
             if (ticket == null)
                 return NotFound();
             return ticket;

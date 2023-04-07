@@ -31,7 +31,31 @@ namespace Infrastructure.Context
                     SistemaOperativo = "Windows 11",
                 };
 
+                var computadora2 = new Computadora
+                {
+                    TipoComputadora = TipoComputadora.ESCRITORIO,
+                    MarcaModel = "Computadora 2",
+                    NumeroSerie = "2626",
+                    Procesador = "M1",
+                    RAM = "16 GB",
+                    Disco = "256 GB",
+                    SistemaOperativo = "macOS Ventura",
+                };
+
+                var computadora3 = new Computadora
+                {
+                    TipoComputadora = TipoComputadora.LAPTOP,
+                    MarcaModel = "Computadora 3",
+                    NumeroSerie = "2727",
+                    Procesador = "i5 5600",
+                    RAM = "16 GB",
+                    Disco = "256 GB",
+                    SistemaOperativo = "Ubuntu 20",
+                };
+
                 context.Computadoras.Add(computadora1);
+                context.Computadoras.Add(computadora2);
+                context.Computadoras.Add(computadora3);
                 context.SaveChanges();
 
                 var empleado1 = new Empleado
@@ -43,6 +67,16 @@ namespace Infrastructure.Context
 
 
                 context.Empleados.Add(empleado1);
+                context.SaveChanges();
+
+                var ticket1 = new Ticket
+                {
+                    IdComputadora = computadora1.Id,
+                    Prioridad = Prioridad.BAJA,
+                    DescripcionProblema = "Instalar office en la computadora del empleado"
+                };
+
+                context.Tickets.Add(ticket1);
                 context.SaveChanges();
             }
         }
