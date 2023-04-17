@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using ApplicationCore.Helpers;
+using Infrastructure.Context;
 using Infrastructure.Models;
 using Infrastructure.Repositories.Generic;
 using Microsoft.Extensions.Logging;
@@ -9,12 +10,12 @@ namespace ApplicationCore.IServices.Generic
 {
 	public class GenericService<TEntity> : IGenericService<TEntity> where TEntity : class, new()
     {
-        private readonly IRepository _repo;
+        private readonly GenericRepository<TEntity> _repo;
         private readonly ILogger<GenericService<TEntity>> _logger;
 
-        public GenericService(IRepository repo, ILogger<GenericService<TEntity>> logger)
+        public GenericService(OpenTicketsContext context, ILogger<GenericService<TEntity>> logger)
         {
-            _repo = repo;
+            _repo = new GenericRepository<TEntity>(context);
             _logger = logger;
         }
 
@@ -23,7 +24,7 @@ namespace ApplicationCore.IServices.Generic
             var list = new List<TEntity>();
             try
             {
-                list = await _repo.Generic<TEntity>().GetList(relationships);
+                list = await _repo.GetList(relationships);
             }
             catch (Exception e)
             {
@@ -37,7 +38,7 @@ namespace ApplicationCore.IServices.Generic
             var model = new TEntity();
             try
             {
-                model = await _repo.Generic<TEntity>().GetOrNull(id, relationships) ?? new TEntity();
+                model = await _repo.GetOrNull(id, relationships) ?? new TEntity();
             }
             catch (Exception e)
             {
@@ -51,7 +52,7 @@ namespace ApplicationCore.IServices.Generic
             var model = default(TEntity);
             try
             {
-                model = await _repo.Generic<TEntity>().GetOrNull(id, relationships);
+                model = await _repo.GetOrNull(id, relationships);
             }
             catch (Exception e)
             {
@@ -67,14 +68,14 @@ namespace ApplicationCore.IServices.Generic
             {
                 if(nameExists != null)
                 {
-                    var exists = await _repo.Generic<TEntity>().ElementExists(nameExists);
+                    var exists = await _repo.ElementExists(nameExists);
                     if (exists)
                     {
                         response.Message = "Ya existe un elemento con este nombre, intente con uno nuevo";
                         return response;
                     }
                 }
-                await _repo.Generic<TEntity>().Create(entity);
+                await _repo.Create(entity);
                 response.Success = true;
                 response.Message = "Elemento agregado correctamente";
             }
@@ -92,14 +93,14 @@ namespace ApplicationCore.IServices.Generic
             {
                 if (nameExists != null)
                 {
-                    var exists = await _repo.Generic<TEntity>().ElementExists(nameExists);
+                    var exists = await _repo.ElementExists(nameExists);
                     if (exists)
                     {
                         response.Message = "Ya existe un elemento con este nombre, intente con uno nuevo";
                         return response;
                     }
                 }
-                await _repo.Generic<TEntity>().Update(entity);
+                await _repo.Update(entity);
                 response.Success = true;
                 response.Message = "Elemento actualizado correctamente";
             }
@@ -115,7 +116,7 @@ namespace ApplicationCore.IServices.Generic
             var response = new Response();
             try
             {
-                var model = await _repo.Generic<TEntity>().GetOrNull(id, relationships) ?? new TEntity();
+                var model = await _repo.GetOrNull(id, relationships) ?? new TEntity();
                 if(dependant != "")
                 {
                     if(PropertyExists(model, dependant) != null)
@@ -124,7 +125,7 @@ namespace ApplicationCore.IServices.Generic
                         return response;
                     }
                 }
-                await _repo.Generic<TEntity>().Delete(model);
+                await _repo.Delete(model);
                 response.Success = true;
                 response.Message = "Elemento eliminado correctamente";
             }
