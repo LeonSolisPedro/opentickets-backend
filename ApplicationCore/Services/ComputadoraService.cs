@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.IServices;
-using ApplicationCore.IServices.Generic;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
@@ -8,14 +7,14 @@ using Microsoft.Extensions.Logging;
 
 namespace ApplicationCore.Services
 {
-    public class ComputadoraService : GenericService<Computadora>, IComputadoraService
+    public class ComputadoraService : IComputadoraService
     {
 
         private readonly GenericRepository<Computadora> _repo;
         private readonly ComputadoraRepository _repoComputadora;
         private readonly ILogger<ComputadoraService> _logger;
 
-        public ComputadoraService(OpenTicketsContext context, ILogger<ComputadoraService> logger) : base(context, logger)
+        public ComputadoraService(OpenTicketsContext context, ILogger<ComputadoraService> logger)
         {
             _repo = new GenericRepository<Computadora>(context);
             _repoComputadora = new ComputadoraRepository(context);
