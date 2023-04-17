@@ -2,7 +2,6 @@ using ApplicationCore.IServices;
 using ApplicationCore.IServices.Generic;
 using ApplicationCore.Services;
 using Infrastructure.Context;
-using Infrastructure.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -11,11 +10,9 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; });
-builder.Services.AddDbContext<OpenTicketsContext>(opt =>
-    opt.UseInMemoryDatabase("opentickets"));
+builder.Services.AddDbContext<OpenTicketsContext>(opt => opt.UseInMemoryDatabase("opentickets"));
 builder.Services.AddCors(options => options.AddPolicy("AllowWebApp", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IComputadoraService, ComputadoraService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 

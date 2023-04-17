@@ -1,7 +1,6 @@
-﻿using System;
-namespace ApplicationCore.Helpers
+﻿namespace ApplicationCore.Helpers
 {
-	public class Response
+    public class Response
     {
         public bool Success { get; set; } = false;
         public string Message { get; set; } = "Ha ocurrido un error";

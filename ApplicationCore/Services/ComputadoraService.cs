@@ -1,29 +1,24 @@
-﻿using ApplicationCore.Helpers;
-using ApplicationCore.IServices;
+﻿using ApplicationCore.IServices;
 using ApplicationCore.IServices.Generic;
 using Infrastructure.Context;
 using Infrastructure.Models;
+using Infrastructure.Repositories;
 using Infrastructure.Repositories.Generic;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
 {
     public class ComputadoraService : GenericService<Computadora>, IComputadoraService
     {
 
-        private readonly IRepository _repo;
+        private readonly GenericRepository<Computadora> _repo;
+        private readonly ComputadoraRepository _repoComputadora;
         private readonly ILogger<ComputadoraService> _logger;
 
-        public ComputadoraService(IRepository repo, ILogger<ComputadoraService> logger) : base(repo, logger)
+        public ComputadoraService(OpenTicketsContext context, ILogger<ComputadoraService> logger) : base(context, logger)
         {
-            _repo = repo;
+            _repo = new GenericRepository<Computadora>(context);
+            _repoComputadora = new ComputadoraRepository(context);
             _logger = logger;
         }
 
@@ -32,7 +27,7 @@ namespace ApplicationCore.Services
             var list = new List<Computadora>();
             try
             {
-                list = await _repo.Generic<Computadora>().GetList("Empleado");
+                list = await _repo.GetList("Empleado");
 
                 if (empleados == "asignados")
                     list = list.Where(x => x.Empleado != null).ToList();
@@ -49,8 +44,8 @@ namespace ApplicationCore.Services
 
         public async Task<string> SayHi()
         {
-            var uwu = await _repo.Computadoras.GetPrimerCompu();
-            var hayvoy = await _repo.Generic<Computadora>().GetList();
+            var uwu = await _repoComputadora.GetPrimerCompu();
+            var hayvoy = await _repo.GetList();
             return $"Hello from Computadora Service: {uwu.MarcaModel} - Count: {hayvoy.Count}";
         }
     }

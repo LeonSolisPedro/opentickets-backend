@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
-using ApplicationCore.IServices.Generic;
-using Infrastructure.Models;
 using ApplicationCore.IServices;
+using Infrastructure.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
@@ -62,7 +61,7 @@ namespace Web.Controllers
             return Ok();
         }
 
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Computadora computadora)
         {
@@ -72,7 +71,7 @@ namespace Web.Controllers
             return Ok();
         }
 
-        
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

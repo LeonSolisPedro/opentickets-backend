@@ -1,10 +1,9 @@
-﻿using System;
+﻿using ApplicationCore.Helpers;
 using System.Linq.Expressions;
-using ApplicationCore.Helpers;
 
 namespace ApplicationCore.IServices.Generic
 {
-	public interface IGenericService<TEntity> where TEntity : class, new()
+    public interface IGenericService<TEntity> where TEntity : class, new()
     {
         Task<List<TEntity>> GetList(string relationships = "");
         Task<TEntity> Get(int id, string relationships = "");

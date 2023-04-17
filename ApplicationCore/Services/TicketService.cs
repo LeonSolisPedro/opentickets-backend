@@ -1,7 +1,7 @@
-using System;
 using ApplicationCore.Helpers;
 using ApplicationCore.IServices;
 using ApplicationCore.IServices.Generic;
+using Infrastructure.Context;
 using Infrastructure.Models;
 using Infrastructure.Repositories.Generic;
 using Microsoft.Extensions.Logging;
@@ -10,13 +10,15 @@ namespace ApplicationCore.Services
 {
     public class TicketService : GenericService<Ticket>, ITicketService
     {
-        private readonly IRepository _repo;
+        private readonly GenericRepository<Ticket> _repo;
+        private readonly GenericRepository<Solucion> _repoSolucion;
         private readonly ILogger<TicketService> _logger;
 
 
-        public TicketService(IRepository repo, ILogger<TicketService> logger) : base(repo, logger)
+        public TicketService(OpenTicketsContext context, ILogger<TicketService> logger) : base(context, logger)
         {
-            _repo = repo;
+            _repo = new GenericRepository<Ticket>(context);
+            _repoSolucion = new GenericRepository<Solucion>(context);
             _logger = logger;
         }
 
@@ -25,7 +27,7 @@ namespace ApplicationCore.Services
             var list = new List<Ticket>();
             try
             {
-                list = await _repo.Generic<Ticket>().GetList(x => x.IdComputadora == idCompu, "Solucion");
+                list = await _repo.GetList(x => x.IdComputadora == idCompu, "Solucion");
             }
             catch (Exception e)
             {
@@ -39,7 +41,7 @@ namespace ApplicationCore.Services
             var response = new Response();
             try
             {
-                await _repo.Generic<Solucion>().Create(solucion);
+                await _repoSolucion.Create(solucion);
                 response.Success = true;
                 response.Message = "Solución aggregada correctamente";
                 return response;

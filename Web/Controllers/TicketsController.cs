@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
-using ApplicationCore.IServices.Generic;
-using Infrastructure.Models;
 using ApplicationCore.IServices;
+using Infrastructure.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
