@@ -1,18 +1,9 @@
-﻿using ApplicationCore.Helpers;
-using ApplicationCore.IServices;
+﻿using ApplicationCore.IServices;
 using ApplicationCore.IServices.Generic;
-using Infrastructure.Context;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Generic;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
 {

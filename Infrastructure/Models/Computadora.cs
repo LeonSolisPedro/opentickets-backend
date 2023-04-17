@@ -1,11 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static Infrastructure.Enums.Enums;
 
 namespace Infrastructure.Models
 {
-	public class Computadora
-	{
+    public class Computadora
+    {
         [Key]
         public int Id { get; set; }
 

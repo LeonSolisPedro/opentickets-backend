@@ -2,7 +2,6 @@ using ApplicationCore.IServices;
 using ApplicationCore.IServices.Generic;
 using ApplicationCore.Services;
 using Infrastructure.Context;
-using Infrastructure.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 

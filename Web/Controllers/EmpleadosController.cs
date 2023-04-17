@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using ApplicationCore.IServices.Generic;
 using Infrastructure.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
@@ -15,14 +15,14 @@ namespace Web.Controllers
             _genericService = genericService;
         }
 
-        
+
         [HttpGet]
         public async Task<List<Empleado>> Get()
         {
             return await _genericService.GetList();
         }
 
-        
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Empleado>> Get(int id)
         {
@@ -42,7 +42,7 @@ namespace Web.Controllers
             return Ok();
         }
 
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Empleado empleado)
         {
@@ -52,7 +52,7 @@ namespace Web.Controllers
             return Ok();
         }
 
-        
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

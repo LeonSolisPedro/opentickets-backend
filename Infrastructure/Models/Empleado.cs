@@ -1,11 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Models
 {
-	public class Empleado
-	{
+    public class Empleado
+    {
         [Key]
         public int Id { get; set; }
 

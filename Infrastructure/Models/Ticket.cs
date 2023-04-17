@@ -1,12 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static Infrastructure.Enums.Enums;
 
 namespace Infrastructure.Models
 {
-	public class Ticket
-	{
+    public class Ticket
+    {
         [Key]
         public int Id { get; set; }
 

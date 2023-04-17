@@ -1,14 +1,11 @@
-﻿using System;
-using System.Linq.Expressions;
-using ApplicationCore.Helpers;
-using Infrastructure.Context;
-using Infrastructure.Models;
+﻿using ApplicationCore.Helpers;
 using Infrastructure.Repositories.Generic;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace ApplicationCore.IServices.Generic
 {
-	public class GenericService<TEntity> : IGenericService<TEntity> where TEntity : class, new()
+    public class GenericService<TEntity> : IGenericService<TEntity> where TEntity : class, new()
     {
         private readonly GenericRepository<TEntity> _repo;
         private readonly ILogger<GenericService<TEntity>> _logger;
@@ -66,7 +63,7 @@ namespace ApplicationCore.IServices.Generic
             var response = new Response();
             try
             {
-                if(nameExists != null)
+                if (nameExists != null)
                 {
                     var exists = await _repo.ElementExists(nameExists);
                     if (exists)
@@ -116,10 +113,10 @@ namespace ApplicationCore.IServices.Generic
             var response = new Response();
             try
             {
-                var model = await _repo.GetOrNull(id, relationships) ?? new TEntity();
-                if(dependant != "")
+                var model = await _repo.Generic<TEntity>().GetOrNull(id, relationships) ?? new TEntity();
+                if (dependant != "")
                 {
-                    if(PropertyExists(model, dependant) != null)
+                    if (PropertyExists(model, dependant) != null)
                     {
                         response.Message = "El elemento está asignado a otros elementos, lo que evita su eliminación";
                         return response;

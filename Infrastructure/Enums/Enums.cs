@@ -1,5 +1,4 @@
-﻿using System;
-namespace Infrastructure.Enums
+﻿namespace Infrastructure.Enums
 {
     public class Enums
     {
