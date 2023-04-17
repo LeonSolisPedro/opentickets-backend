@@ -1,9 +1,8 @@
-﻿using ApplicationCore.IServices.Generic;
-using Infrastructure.Models;
+﻿using Infrastructure.Models;
 
 namespace ApplicationCore.IServices
 {
-    public interface IComputadoraService : IGenericService<Computadora>
+    public interface IComputadoraService
     {
         Task<List<Computadora>> GetComputadorasDropdown(string? empleados);
         Task<string> SayHi();

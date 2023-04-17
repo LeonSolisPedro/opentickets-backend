@@ -1,4 +1,5 @@
 using ApplicationCore.IServices;
+using ApplicationCore.IServices.Generic;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,12 @@ namespace Web.Controllers
     [ApiController]
     public class ComputadorasController : ControllerBase
     {
+        private readonly IGenericService<Computadora> _genericService;
         private readonly IComputadoraService _computadoraService;
 
-        public ComputadorasController(IComputadoraService computadoraService)
+        public ComputadorasController(IGenericService<Computadora> genericService, IComputadoraService computadoraService)
         {
+            _genericService = genericService;
             _computadoraService = computadoraService;
         }
 
@@ -20,7 +23,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<List<Computadora>> GetComputadoras()
         {
-            return await _computadoraService.GetList();
+            return await _genericService.GetList();
         }
 
 
@@ -28,7 +31,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult<Computadora>> GetComputadoras(int id)
         {
-            var computadora = await _computadoraService.GetOrNull(id);
+            var computadora = await _genericService.GetOrNull(id);
             if (computadora == null)
                 return NotFound();
             return computadora;
@@ -55,7 +58,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Computadora computadora)
         {
-            var response = await _computadoraService.Create(computadora);
+            var response = await _genericService.Create(computadora);
             if (response.Success == false)
                 return UnprocessableEntity();
             return Ok();
@@ -65,7 +68,7 @@ namespace Web.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Computadora computadora)
         {
-            var response = await _computadoraService.Update(computadora);
+            var response = await _genericService.Update(computadora);
             if (response.Success == false)
                 return UnprocessableEntity();
             return Ok();
@@ -75,7 +78,7 @@ namespace Web.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _computadoraService.Delete(id, "Empleado", "Empleado");
+            var response = await _genericService.Delete(id, "Empleado", "Empleado");
             if (response.Success == false)
                 return UnprocessableEntity();
             return Ok();

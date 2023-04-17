@@ -1,10 +1,11 @@
 ﻿using ApplicationCore.Helpers;
+using ApplicationCore.IServices.Generic;
 using Infrastructure.Context;
 using Infrastructure.Repositories.Generic;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
-namespace ApplicationCore.IServices.Generic
+namespace ApplicationCore.Services.Generic
 {
     public class GenericService<TEntity> : IGenericService<TEntity> where TEntity : class, new()
     {

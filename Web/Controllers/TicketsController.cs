@@ -1,4 +1,5 @@
 using ApplicationCore.IServices;
+using ApplicationCore.IServices.Generic;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,12 @@ namespace Web.Controllers
     [ApiController]
     public class TicketsController : ControllerBase
     {
+        private readonly IGenericService<Ticket> _genericService;
         private readonly ITicketService _ticketService;
 
-        public TicketsController(ITicketService ticketService)
+        public TicketsController(IGenericService<Ticket> genericService, ITicketService ticketService)
         {
+            _genericService = genericService;
             _ticketService = ticketService;
         }
 
@@ -20,7 +23,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<List<Ticket>> GetTickets()
         {
-            return await _ticketService.GetList("Computadora,Computadora.Empleado,Solucion");
+            return await _genericService.GetList("Computadora,Computadora.Empleado,Solucion");
         }
 
 
@@ -28,7 +31,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult<Ticket>> GetTickets(int id)
         {
-            var ticket = await _ticketService.GetOrNull(id, "Solucion");
+            var ticket = await _genericService.GetOrNull(id, "Solucion");
             if (ticket == null)
                 return NotFound();
             return ticket;
@@ -47,7 +50,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearTicket(Ticket ticket)
         {
-            var response = await _ticketService.Create(ticket);
+            var response = await _genericService.Create(ticket);
             if (response.Success == false)
                 return UnprocessableEntity();
             return Ok();
@@ -69,7 +72,7 @@ namespace Web.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(int id, Ticket ticket)
         {
-            var response = await _ticketService.Update(ticket);
+            var response = await _genericService.Update(ticket);
             if (response.Success == false)
                 return UnprocessableEntity();
             return Ok();

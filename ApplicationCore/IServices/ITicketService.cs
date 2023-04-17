@@ -1,10 +1,9 @@
 ﻿using ApplicationCore.Helpers;
-using ApplicationCore.IServices.Generic;
 using Infrastructure.Models;
 
 namespace ApplicationCore.IServices
 {
-    public interface ITicketService : IGenericService<Ticket>
+    public interface ITicketService
     {
         Task<List<Ticket>> GetTicketsPorIdCompu(int idCompu);
         Task<Response> AgregarSolucion(Solucion solucion);
