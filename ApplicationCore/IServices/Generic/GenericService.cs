@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Helpers;
+using Infrastructure.Context;
 using Infrastructure.Repositories.Generic;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -113,7 +114,7 @@ namespace ApplicationCore.IServices.Generic
             var response = new Response();
             try
             {
-                var model = await _repo.Generic<TEntity>().GetOrNull(id, relationships) ?? new TEntity();
+                var model = await _repo.GetOrNull(id, relationships) ?? new TEntity();
                 if (dependant != "")
                 {
                     if (PropertyExists(model, dependant) != null)
