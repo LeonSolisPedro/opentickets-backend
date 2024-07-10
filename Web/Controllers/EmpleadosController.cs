@@ -1,65 +1,66 @@
-using ApplicationCore.IServices.Generic;
-using Infrastructure.Models;
+using Asp.Versioning;
+using Core.Entites;
+using Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Controllers
+namespace Web.Controllers;
+
+[ApiController]
+[ApiVersion(1)]
+[Route("api/v{v:apiVersion}/[controller]")]
+public class EmpleadosController : ControllerBase
 {
-    [Route("[controller]")]
-    [ApiController]
-    public class EmpleadosController : ControllerBase
-    {
-        private readonly IGenericService<Empleado> _genericService;
+  private readonly EmpleadoService _empleadoService;
 
-        public EmpleadosController(IGenericService<Empleado> genericService)
-        {
-            _genericService = genericService;
-        }
+  public EmpleadosController(EmpleadoService empleadoService)
+  {
+    _empleadoService = empleadoService;
+  }
 
 
-        [HttpGet]
-        public async Task<List<Empleado>> Get()
-        {
-            return await _genericService.GetList();
-        }
+  [HttpGet]
+  public async Task<List<Empleado>> Get()
+  {
+    return await _empleadoService.GetList();
+  }
 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Empleado>> Get(int id)
-        {
-            var empleado = await _genericService.GetOrNull(id, "Computadora");
-            if (empleado == null)
-                return NotFound();
-            return empleado;
-        }
+  [HttpGet("{id}")]
+  public async Task<ActionResult<Empleado>> Get(int id)
+  {
+    var empleado = await _empleadoService.GetOrNull(id);
+    if (empleado == null)
+      return NotFound();
+    return empleado;
+  }
 
 
-        [HttpPost]
-        public async Task<IActionResult> Post(Empleado empleado)
-        {
-            var response = await _genericService.Create(empleado);
-            if (response.Success == false)
-                return UnprocessableEntity();
-            return Ok();
-        }
+  [HttpPost]
+  public async Task<IActionResult> Post(Empleado empleado)
+  {
+    var response = await _empleadoService.Create(empleado);
+    if (response.Success == false)
+      return UnprocessableEntity();
+    return Ok();
+  }
 
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Empleado empleado)
-        {
-            var response = await _genericService.Update(empleado);
-            if (response.Success == false)
-                return UnprocessableEntity();
-            return Ok();
-        }
+  [HttpPut("{id}")]
+  public async Task<IActionResult> Put(int id, Empleado empleado)
+  {
+    var response = await _empleadoService.Edit(empleado);
+    if (response.Success == false)
+      return UnprocessableEntity();
+    return Ok();
+  }
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var response = await _genericService.Delete(id);
-            if (response.Success == false)
-                return UnprocessableEntity();
-            return Ok();
-        }
-    }
+  [HttpDelete("{id}")]
+  public async Task<IActionResult> Delete(int id)
+  {
+    var response = await _empleadoService.Delete(id);
+    if (response.Success == false)
+      return UnprocessableEntity();
+    return Ok();
+  }
 }
