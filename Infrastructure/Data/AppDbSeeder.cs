@@ -5,9 +5,9 @@ using static Core.Dto.Enums;
 
 namespace Infrastructure.Data;
 
-public class OpenTicketsSeeder
+public class AppDbSeeder
 {
-  public static async Task SeedAsync(OpenTicketsContext _context)
+  public static async Task SeedAsync(AppDbContext _context)
   {
     // Si hay computadoras, ya no continues
     if (_context.Computadoras.Any())

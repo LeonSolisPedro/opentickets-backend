@@ -8,9 +8,9 @@ namespace Infrastructure.Repositories;
 public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
 {
 
-    private readonly OpenTicketsContext _context;
+    private readonly AppDbContext _context;
 
-    public GenericRepository(OpenTicketsContext context)
+    public GenericRepository(AppDbContext context)
     {
         _context = context;
     }
