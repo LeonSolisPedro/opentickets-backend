@@ -8,9 +8,9 @@ namespace Infrastructure.Repositories;
 public class ComputadoraRepository : IComputadoraRepository
 {
 
-    private readonly OpenTicketsContext _context;
+    private readonly AppDbContext _context;
 
-    public ComputadoraRepository(OpenTicketsContext context)
+    public ComputadoraRepository(AppDbContext context)
     {
         _context = context;
     }

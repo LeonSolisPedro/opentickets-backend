@@ -47,7 +47,7 @@ builder.Services.AddApiVersioning(options =>
 });
 // .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddDbContext<OpenTicketsContext>(opt => opt.UseInMemoryDatabase("opentickets"));
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("opentickets"));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ComputadoraService>();
 builder.Services.AddScoped<EmpleadoService>();
@@ -65,8 +65,8 @@ if (app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
   var services = scope.ServiceProvider;
-  var context = services.GetRequiredService<OpenTicketsContext>();
-  await OpenTicketsSeeder.SeedAsync(context);
+  var context = services.GetRequiredService<AppDbContext>();
+  await AppDbSeeder.SeedAsync(context);
 }
 app.UseCors("CorsPolicy");
 app.UseRateLimiter();

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-public class OpenTicketsContext : DbContext
+public class AppDbContext : DbContext
 {
-  public OpenTicketsContext(DbContextOptions options) : base(options)
+  public AppDbContext(DbContextOptions options) : base(options)
   {
   }
 
