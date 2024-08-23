@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 
-// Add services to the container.
+// Add services to the containerr.
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
