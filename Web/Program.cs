@@ -35,17 +35,11 @@ builder.Services.AddControllers(options => {
 });
 builder.Services.AddApiVersioning(options =>
 {
-    options.DefaultApiVersion = new ApiVersion(1);
-    options.ReportApiVersions = true;
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ApiVersionReader = ApiVersionReader.Combine(
-        new UrlSegmentApiVersionReader());
-}).AddApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
+  options.DefaultApiVersion = new ApiVersion(1);
+  options.ReportApiVersions = true;
+  options.AssumeDefaultVersionWhenUnspecified = true;
+  options.ApiVersionReader = new UrlSegmentApiVersionReader();
 });
-// .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("opentickets"));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
