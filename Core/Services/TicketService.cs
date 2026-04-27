@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Services;
 
-public class TicketService
+public class TicketService : ITicketService
 {
     private readonly IGenericRepository<Ticket> _genericRepository;
 
@@ -121,4 +121,14 @@ public class TicketService
         }
         return response;
     }
+}
+
+public interface ITicketService
+{
+    Task<List<Ticket>> GetList();
+    Task<Ticket?> GetOrNull(int id);
+    Task<Response> Create(Ticket ticket);
+    Task<Response> Edit(Ticket ticket);
+    Task<List<Ticket>> GetTicketsPorIdCompu(int idCompu);
+    Task<Response> AgregarSolucion(Solucion solucion);
 }
