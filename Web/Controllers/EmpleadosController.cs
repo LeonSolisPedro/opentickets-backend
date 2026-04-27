@@ -10,9 +10,9 @@ namespace Web.Controllers;
 [Route("api/v{v:apiVersion}/[controller]")]
 public class EmpleadosController : ControllerBase
 {
-  private readonly EmpleadoService _empleadoService;
+  private readonly IEmpleadoService _empleadoService;
 
-  public EmpleadosController(EmpleadoService empleadoService)
+  public EmpleadosController(IEmpleadoService empleadoService)
   {
     _empleadoService = empleadoService;
   }
