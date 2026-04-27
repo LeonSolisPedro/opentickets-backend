@@ -43,9 +43,9 @@ builder.Services.AddApiVersioning(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("opentickets"));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<ComputadoraService>();
-builder.Services.AddScoped<EmpleadoService>();
-builder.Services.AddScoped<TicketService>();
+builder.Services.AddScoped<IComputadoraService, ComputadoraService>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IComputadoraRepository, ComputadoraRepository>();
 
 

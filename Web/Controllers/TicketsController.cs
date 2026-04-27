@@ -10,9 +10,9 @@ namespace Web.Controllers;
 [Route("api/v{v:apiVersion}/[controller]")]
 public class TicketsController : ControllerBase
 {
-  private readonly TicketService _ticketService;
+  private readonly ITicketService _ticketService;
 
-  public TicketsController(TicketService ticketService)
+  public TicketsController(ITicketService ticketService)
   {
     _ticketService = ticketService;
   }

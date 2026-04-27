@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Services;
 
-public class ComputadoraService
+public class ComputadoraService : IComputadoraService
 {
   private readonly IGenericRepository<Computadora> _genericRepository;
   private readonly IComputadoraRepository _repoComputadora;
@@ -149,4 +149,15 @@ public class ComputadoraService
   }
 
 
+}
+
+public interface IComputadoraService
+{
+  Task<List<Computadora>> GetList();
+  Task<Computadora?> GetOrNull(int id);
+  Task<Response> Create(Computadora computadora);
+  Task<Response> Edit(Computadora computadora);
+  Task<Response> Delete(int id);
+  Task<List<Computadora>> GetComputadorasDropdown(string? empleados);
+  Task<string> SayHi();
 }

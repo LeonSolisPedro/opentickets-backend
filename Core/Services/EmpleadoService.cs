@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Services;
 
-public class EmpleadoService
+public class EmpleadoService : IEmpleadoService
 {
 
 
@@ -104,4 +104,13 @@ public class EmpleadoService
     }
     return response;
   }
+}
+
+public interface IEmpleadoService
+{
+  Task<List<Empleado>> GetList();
+  Task<Empleado?> GetOrNull(int id);
+  Task<Response> Create(Empleado empleado);
+  Task<Response> Edit(Empleado empleado);
+  Task<Response> Delete(int id);
 }

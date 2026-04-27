@@ -10,9 +10,9 @@ namespace Web.Controllers;
 [Route("api/v{v:apiVersion}/[controller]")]
 public class ComputadorasController : ControllerBase
 {
-  private readonly ComputadoraService _computadoraService;
+  private readonly IComputadoraService _computadoraService;
 
-  public ComputadorasController(ComputadoraService computadoraService)
+  public ComputadorasController(IComputadoraService computadoraService)
   {
     _computadoraService = computadoraService;
   }
